@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="now_playing_access">Home — Now Playing access</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="media_play">Play</string>
+    <string name="media_pause">Pause</string>
+    <string name="media_open_app">Open app</string>
     <string name="app_name">Home</string>
     <string name="inputs">Inputs</string>
     <string name="wifi">Wi-Fi</string>

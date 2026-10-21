@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="now_playing_access">בית — גישה למדיה המתנגנת</string>
+    <string name="now_playing">מתנגן כעת</string>
+    <string name="media_play">ניגון</string>
+    <string name="media_pause">השהיה</string>
+    <string name="media_open_app">פתיחת יישום</string>
     <string name="app_name">בית</string>
     <string name="inputs">כניסות</string>
     <string name="wifi">Wi-Fi</string>

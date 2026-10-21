@@ -440,6 +440,10 @@ checks `ro.build.version.sdk` before building. See [Troubleshooting](docs/TROUBL
 the [Sony Android 7 verification notes](docs/devices/sony-kd-55x8500d-android7.md) and
 [fork branch maintenance](docs/BRANCHES.md). APK size depends on build type and desugaring.
 
+This feature branch adds a [Now Playing panel](docs/NOW_PLAYING.md) with media
+metadata, artwork, Play/Pause and Open App. It is built into the launcher, not a
+module-card APK; notification access is optional and requires the owner's consent.
+
 | What | How it works |
 |---|---|
 | **Configure** | Dock order, hidden apps, Live TV app, 4 to 7 tiles per row, reduced motion. All in [`config.xml`](launcher/app/src/main/res/values/config.xml) |

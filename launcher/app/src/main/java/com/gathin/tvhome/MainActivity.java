@@ -160,6 +160,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private View btnInputs;
     /** config show_inputs_pill: false keeps the Inputs pill hidden even when the TV has inputs. */
     private boolean showInputsPill = true;
+    private NowPlayingView nowPlaying;
+    private NowPlayingController mediaController;
     private TextView btnWifi;
     /** The network pill's icon as last set, so a refresh that changes nothing does not lay the top bar out again. */
     private int wifiIcon;
@@ -552,6 +554,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
 
         btnInputs = findViewById(R.id.btnInputs);
+        nowPlaying = findViewById(R.id.nowPlayingPanel);
+        mediaController = new NowPlayingController(this, nowPlaying::bind);
+        nowPlaying.setActions(mediaController::playPause, mediaController::openApp,
+                () -> (btnInputs.getVisibility() == View.VISIBLE ? btnInputs : firstTopButton()).requestFocus(),
+                () -> { if (started) focusTile(lastFocused % COLUMNS); });
         View btnSettings = findViewById(R.id.btnSettings);
         btnInputs.setOnClickListener(v -> showInputs());
         btnWifi.setOnClickListener(v -> openNetworkPill());
@@ -590,6 +597,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
             if (keyCode == KeyEvent.KEYCODE_DPAD_UP) return true;
             if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                if (nowPlaying.focusControls()) return true;
                 // Back to the dock tile Up came from, not wherever the focus finder lands.
                 focusTile(lastFocused % COLUMNS);
                 return true;
@@ -732,6 +740,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
         updateClockVisibility();
         tileRefresh.onStart();
+        mediaController.start();
     }
 
     @Override
@@ -937,6 +946,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     protected void onStop() {
         super.onStop();
         started = false;
+        mediaController.stop();
         unregisterReceiver(timeReceiver);
         handler.removeCallbacks(clockCheck);
         stopped = true;
@@ -1938,7 +1948,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                     rtlAppGrid, keyCode == KeyEvent.KEYCODE_DPAD_LEFT);
         }
         if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-            if (position < COLUMNS) return false;          // dock row: let focus move to the top bar
+            if (position < COLUMNS) {
+                if (nowPlaying.focusControls()) return true;
+                return false; // no current media: preserve the existing top-bar path
+            }
             target = position - COLUMNS;
         } else {
             int lastRowStart = ((count - 1) / COLUMNS) * COLUMNS;

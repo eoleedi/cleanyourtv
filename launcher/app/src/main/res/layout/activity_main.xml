@@ -346,6 +346,14 @@
             </LinearLayout>
         </RelativeLayout>
 
+        <com.gathin.tvhome.NowPlayingView
+            android:id="@+id/nowPlayingPanel"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_gravity="start"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp" />
+
         <!-- The wrapper clips at the grid's edge; the grid itself must not clip so scaled tiles can overflow their cells. -->
         <FrameLayout
             android:layout_width="match_parent"
