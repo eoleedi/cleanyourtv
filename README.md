@@ -432,10 +432,13 @@ apps), which is why the report names that loss per package instead of calling it
 A small native home screen for Android TV: **about 445 KB**, plain Java, built for TVs with 1 GB of RAM.
 No blur, no video, no network permission, no background services.
 
-The **TV** needs Android 8.0 (API 26) or newer: `minSdk` is a compile-time floor in
-[`launcher/app/build.gradle`](launcher/app/build.gradle), and the install script asks the TV for
-`ro.build.version.sdk` before it builds, so an older set is told both numbers instead of failing at
-`pm install` (see [Troubleshooting](docs/TROUBLESHOOTING.md) for what is left on such a set).
+**This fork's `android-tv-7` branch supports Android 7.0 (API 24) and newer**, using
+Java API desugaring and compatible static fonts. The upstream published launcher required
+Android 8.0 (API 26); use an APK built from this branch, not an older upstream download.
+The compiled floor is in [`launcher/app/build.gradle`](launcher/app/build.gradle); the installer
+checks `ro.build.version.sdk` before building. See [Troubleshooting](docs/TROUBLESHOOTING.md),
+the [Sony Android 7 verification notes](docs/devices/sony-kd-55x8500d-android7.md) and
+[fork branch maintenance](docs/BRANCHES.md). APK size depends on build type and desugaring.
 
 | What | How it works |
 |---|---|

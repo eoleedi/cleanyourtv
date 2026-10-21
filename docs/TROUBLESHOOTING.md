@@ -146,17 +146,22 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
 - **Play Protect blocked the launcher** ("unsafe app blocked, built for an older version of Android")
   and `pm install` hung, then failed with `INSTALL_FAILED_VERIFICATION_FAILURE`, while it targeted
   SDK 29. It targets 34 now; if you built an old checkout, rebuild.
-- **`pm install` fails with `INSTALL_FAILED_OLDER_SDK`** on a set older than the launcher: the APK's
-  `minSdk` is a compile-time floor, so a TV on Android 7.0/7.1 (SDK 24/25) cannot take the published
-  build at all ([#576](https://github.com/Gathin23/cleanyourtv/issues/576)). Read both numbers before
-  changing anything: `tools/tv.py 'getprop ro.build.version.sdk'` and
-  `grep minSdk launcher/app/build.gradle` (26, i.e. Android 8.0, at the time of writing).
+- **`pm install` fails with `INSTALL_FAILED_OLDER_SDK`** when the TV is below the APK's compiled floor.
+  **Local compatibility build:** minSdk 24, targetSdk 34.
+  This checkout's experimental Android 7 support adds desugaring and compatible fonts;
+  see the [Sony Android 7 trial](devices/sony-kd-55x8500d-android7.md). It is not just a changed number.
+  Read both numbers: `tools/tv.py 'getprop ro.build.version.sdk'` and
+  `grep minSdk launcher/app/build.gradle`.
+
+  **Historical upstream build:** the published launcher originally required minSdk 26
+  (Android 8.0), so Android 7.0/7.1 could not install that APK
+  ([#576](https://github.com/Gathin23/cleanyourtv/issues/576)). A downloaded SDK-26 APK
+  still cannot run on API 24 merely because this checkout's source has been adapted.
   `launcher/build-and-install.sh` now asks the TV first and stops with both numbers, so nothing is
   built or pushed for a set that will refuse it; `build-and-install.ps1` only reports it after
   `pm install`, which fails safely with the stock launcher untouched. Lowering `minSdk` is a source
-  change, not a setting, and it means maintaining your own copy: the launcher uses AndroidX and
-  framework calls newer than API 25, so expect compile errors or a launcher that starts and then
-  crashes. An APK produced by rebuilding the project elsewhere (an assistant, an online builder, a
+  change, not a setting, and it means maintaining your own copy: a compatibility port must address
+  newer Java/framework calls and fonts, then verify runtime behavior. An APK produced elsewhere (an assistant, an online builder, a
   "rebuilt for API 25" zip from a forum) is not something this repository can check, and the install
   scripts only push the APK they compiled themselves: a build signed with another key does not
   install over this one (`INSTALL_FAILED_UPDATE_INCOMPATIBLE`), so uninstall the old one first if you
